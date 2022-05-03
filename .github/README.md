@@ -4,7 +4,7 @@
 
 - [NPM + NodeJS](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-![A picture of the demonstration](./.github/demo.png)
+![A picture of the demonstration](./demo.png)
 
 Steps:
 
