@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>Websocket Demo</title>
+    </head>
+    <body>
+        <h1>Websocket Demo</h1>
+        <div id="status">
+            <p id="statusmessage">Connecting to Websocket server...</p>
+        </div>
+        <div id="connected" hidden>
+            <label for="received">To server:</label><br/>
+            <input type="text" id="message" placeholder="Hello server!"/>
+            <button id="send">Send</button><br/><br/>
+            <label for="received">From server:</label><br/>
+            <textarea id="received"></textarea>
+        </div>
+        <script>
+            // Establish a websocket connection - note 'ws' vs. 'wss' for secure
+            const websocket = new WebSocket('ws://localhost:8080');
+            let error = false;
+
+            // Register error handlers
+            websocket.onerror = () => {
+                document.getElementById('statusmessage').innerText = 'An error occured - check the console!';
+                document.getElementById('status').hidden = false;
+                document.getElementById('connected').hidden = true;
+                error = true;
+            }
+            websocket.onclose = () => {
+                if (error)
+                    return;
+                    
+                document.getElementById('statusmessage').innerText = 'Websocket connection closed';
+                document.getElementById('status').hidden = false;
+                document.getElementById('connected').hidden = true;
+            }
+
+            // When the websocket connection is successfully established...
+            websocket.onopen = () => {
+
+                // Update the view
+                document.getElementById('status').hidden = true;
+                document.getElementById('connected').hidden = false;
+
+                // Register event listener against button (send)
+                document.getElementById('send').onclick = () => {
+                    
+                    // Read text from input field
+                    const textElement = document.getElementById('message');
+                    const message = textElement.value;
+
+                    // Send it to websocket
+                    websocket.send(message);
+
+                    // Clear text from the input field
+                    textElement.value = '';
+                };
+
+                // Register event listener for websocket messages (recieve)
+                websocket.onmessage = (message) => {
+                    
+                    document.getElementById('received').innerText = message.data;
+                }
+            }
+        </script>
+    </body>
+</html>
